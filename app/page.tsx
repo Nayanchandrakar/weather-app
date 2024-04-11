@@ -1,25 +1,19 @@
-import getCities from "@/actions/getCities";
-import Container from "@/components/shared/container-component";
-import { DataTable } from "@/app/_components/data-table";
-import { citiesTableType, columns } from "@/app/_components/columns";
+import fetchCities from "@/actions/client/fetchCities";
+import InfiniteDataTable from "@/app/_components/infinite-data";
+import { notFound } from "next/navigation";
 
 interface HomePageProps {}
 
 const HomePage = async ({}: HomePageProps) => {
-  // fetching cities api using server action --> server side
-  const response = await getCities({ limits: 1 });
+  const data = await fetchCities(7);
 
-  const data: citiesTableType[] = response?.map((output, index) => ({
-    id: index + 1,
-    cityName: output?.name,
-    country: output?.country,
-    timezone: output?.timezone,
-  }));
+  if (!data) notFound();
 
   return (
-    <Container className="mt-16">
-      <DataTable columns={columns} data={data} />
-    </Container>
+    <section className="relative">
+      <div className="w-full h-screen  fixed inset-0 hero_gradient z-[-1]" />
+      <InfiniteDataTable data={data} />
+    </section>
   );
 };
 

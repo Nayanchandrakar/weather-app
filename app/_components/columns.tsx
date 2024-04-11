@@ -2,12 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
+import Link from "next/link";
 
 // This type is used to define the shape of our data.
 
 export type citiesTableType = {
-  id: number;
+  id: number | string;
   cityName: string;
   country: string;
   timezone: string;
@@ -41,6 +42,18 @@ export const columns: ColumnDef<citiesTableType>[] = [
       );
     },
     accessorKey: "cityName",
+    cell: ({ row }) => {
+      const cityName = row.getValue("cityName") as string;
+      return (
+        <Link
+          href={`/weather/${cityName}`}
+          target="_blank"
+          className="text-right font-medium"
+        >
+          {cityName}
+        </Link>
+      );
+    },
   },
   {
     header: ({ column }) => {

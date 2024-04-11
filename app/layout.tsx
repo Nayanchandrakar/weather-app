@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 import "./globals.css";
+import { ThemeProvider } from "@/components/shared/theme-provider";
+import { ToogleTheme } from "@/components/shared/toogle-theme";
+import Navbar from "@/components/header/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,8 +20,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn("bg-secondary", inter.className)}>
-        <main>{children}</main>
+      <body className={cn(inter.className)}>
+        <main>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <Navbar />
+            {children}
+          </ThemeProvider>
+        </main>
       </body>
     </html>
   );
