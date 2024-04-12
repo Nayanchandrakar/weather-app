@@ -6,14 +6,17 @@ import {
   KeyboardEvent,
   AllHTMLAttributes,
   useEffect,
+  useRef,
+  ElementRef,
 } from "react";
-import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
 import qs from "query-string";
-import { useRouter, useSearchParams } from "next/navigation";
-import { cn } from "@/lib/utils";
-import { useDebounceValue } from "usehooks-ts";
 import { Loader2, MapPin } from "lucide-react";
+import { useDebounceValue, useOnClickOutside } from "usehooks-ts";
+
+import { Input } from "@/components/ui/input";
 import fetchSearch from "@/actions/client/fetchSearch";
+import { cn } from "@/lib/utils";
 
 interface SearchBarProps extends AllHTMLAttributes<HTMLDivElement> {}
 
@@ -28,14 +31,19 @@ interface searchResultsInterface {
 
 const SearchBar: FC<SearchBarProps> = ({ className, ...props }) => {
   let defaultValue: string = "";
-
   const [debouncedValue, setValue] = useDebounceValue(defaultValue, 500);
   const [searchResults, setsearchResults] = useState<
     searchResultsInterface[] | []
   >([]);
   const [IsLoading, setIsLoading] = useState<boolean>(false);
+  const [focusedIndex, setFocusedIndex] = useState<number>(-1);
+  const menuRef = useRef<ElementRef<"div">>(null);
 
   const router = useRouter();
+
+  const handleClickOutside = () => {
+    setValue("");
+  };
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -54,10 +62,6 @@ const SearchBar: FC<SearchBarProps> = ({ className, ...props }) => {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, [debouncedValue]);
-
   const handleSearch = (lat: number, lon: number) => {
     const url = qs.stringifyUrl(
       {
@@ -70,23 +74,38 @@ const SearchBar: FC<SearchBarProps> = ({ className, ...props }) => {
       { skipEmptyString: true, skipNull: true }
     );
 
-    setValue("");
+    handleClickOutside();
     router?.push(url);
   };
 
   const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e?.code === "Enter") {
-      handleSearch(searchResults[0]?.lat, searchResults[0]?.lon);
+    if (e?.key === "ArrowDown") {
+      e.preventDefault();
+      setFocusedIndex((prevIndex) =>
+        Math.min(prevIndex + 1, searchResults.length - 1)
+      );
+    } else if (e?.key === "ArrowUp") {
+      e.preventDefault();
+      setFocusedIndex((prevIndex) => Math.max(prevIndex - 1, -1));
+    } else if (e?.key === "Enter") {
+      if (focusedIndex !== -1) {
+        handleSearch(
+          searchResults[focusedIndex].lat,
+          searchResults[focusedIndex].lon
+        );
+      }
     }
   };
 
-  //   const handleClear = () => {
-  //     setValue("");
-  //     handleSearch("");
-  //   };
+  useOnClickOutside(menuRef, handleClickOutside);
+
+  useEffect(() => {
+    fetchData();
+  }, [debouncedValue]);
 
   return (
     <div
+      ref={menuRef}
       className={cn("w-full transition-colors relative", className)}
       {...props}
     >
@@ -96,16 +115,34 @@ const SearchBar: FC<SearchBarProps> = ({ className, ...props }) => {
         onKeyUp={handleKeyUp}
         defaultValue={defaultValue}
         placeholder="Search for a city"
-        className="flex items-center
-         "
+        className="flex items-center"
+        role="combobox"
+        aria-haspopup="listbox"
+        aria-expanded={
+          debouncedValue && searchResults.length > 0 ? true : false
+        }
+        aria-owns="suggestion-list"
+        aria-autocomplete="list"
+        aria-controls="suggestion-list"
       />
       {debouncedValue && (
-        <ul className="flex flex-col gap-y-1 border rounded-md bg-background absolute w-full mt-2 overflow-hidden text-sm  p-1 ">
+        <ul
+          className="flex flex-col gap-y-1 border rounded-md bg-background absolute w-full mt-2 overflow-hidden text-sm  p-1 "
+          role="listbox"
+          tabIndex={-1}
+        >
           {(!IsLoading && searchResults?.length > 0)!! &&
-            searchResults?.map((data: any) => (
+            searchResults?.map((data: any, index) => (
               <li
+                key={index}
                 onClick={() => handleSearch(data?.lat, data?.lon)}
-                className="px-3 hover:bg-muted/50  hover:text-foreground/90 cursor-pointer transition-colors duration-200 rounded-md py-2 text-foreground flex "
+                className={cn(
+                  "px-3 hover:bg-muted/70  hover:text-foreground/90 cursor-pointer transition-colors duration-200 rounded-md py-2 text-foreground flex ",
+                  focusedIndex === index && "bg-muted/70 text-foreground/90"
+                )}
+                role="option"
+                aria-selected={focusedIndex === index!!}
+                tabIndex={focusedIndex === index ? 0 : -1}
               >
                 <MapPin className="size-5" />
                 <span className="ml-4 flex flex-col ">
@@ -117,7 +154,7 @@ const SearchBar: FC<SearchBarProps> = ({ className, ...props }) => {
               </li>
             ))}
           {IsLoading && (
-            <span className="px-3 hover:bg-muted/50  hover:text-foreground/90 cursor-pointer transition-colors duration-200 rounded-md py-2 text-foreground flex h-[4rem] items-center justify-center w-full">
+            <span className="px-3 hover:bg-muted/50  hover:text-foreground/90 cursor-pointer  rounded-md py-2 text-foreground flex h-[4rem] items-center justify-center w-full">
               <Loader2 className="size-6 text-sky-600 animate-spin" />
             </span>
           )}
