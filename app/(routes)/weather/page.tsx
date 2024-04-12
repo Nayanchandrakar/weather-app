@@ -1,3 +1,5 @@
+import Container from "@/components/shared/container-component";
+
 interface WeatherPageProps {
   params: {
     cityName: string;
@@ -5,7 +7,7 @@ interface WeatherPageProps {
 }
 
 const WeatherPage = ({ params }: WeatherPageProps) => {
-  return <div>WeatherPage</div>;
+  return <Container className="mt-16">WeatherPage</Container>;
 };
 
 export default WeatherPage;

@@ -1,6 +1,7 @@
 "use server";
 
 import { citiesDataInterface } from "@/types/api-response-datatype";
+import { tempCitiesData } from "@/constant/constant";
 
 const fetchCities = async (limits: number): Promise<citiesDataInterface[]> => {
   try {
@@ -13,7 +14,7 @@ const fetchCities = async (limits: number): Promise<citiesDataInterface[]> => {
 
     return finalData;
   } catch (error) {
-    return [];
+    return [tempCitiesData];
   }
 };
 

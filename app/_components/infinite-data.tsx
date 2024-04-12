@@ -16,7 +16,7 @@ interface InfiniteDataTableInterface {
 const InfiniteDataTable = ({ data }: InfiniteDataTableInterface) => {
   const [newData, setNewData] = useState<citiesDataInterface[]>(data);
   const [IsLoading, setIsLoading] = useState<boolean>(false);
-  const [activityLoaded, setActivityLoaded] = useState<number>(14);
+  const [activityLoaded, setActivityLoaded] = useState<number>(20);
 
   const { isIntersecting, ref } = useIntersectionObserver({
     threshold: 0.5,
@@ -25,7 +25,6 @@ const InfiniteDataTable = ({ data }: InfiniteDataTableInterface) => {
   useEffect(() => {
     if (isIntersecting) {
       fetchActions();
-      console.log(isIntersecting);
     }
   }, [isIntersecting]);
 
@@ -41,8 +40,8 @@ const InfiniteDataTable = ({ data }: InfiniteDataTableInterface) => {
         // new data set here in the state
         setNewData(removingDuplicates);
 
-        // incrementing activityLoaded numbers by 7
-        setActivityLoaded(activityLoaded + 7);
+        // incrementing activityLoaded numbers by 10
+        setActivityLoaded(activityLoaded + 10);
       }
     } catch (error) {
       console.log(error);
@@ -52,7 +51,7 @@ const InfiniteDataTable = ({ data }: InfiniteDataTableInterface) => {
   };
 
   const outputData: citiesTableType[] = newData?.map((output) => ({
-    id: output?.geoname_id,
+    id: `${output?.geoname_id} ~ ${output?.coordinates?.lon} ~ ${output?.coordinates?.lat}`,
     cityName: output?.name,
     country: output?.country,
     timezone: output?.timezone,

@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 interface HomePageProps {}
 
 const HomePage = async ({}: HomePageProps) => {
-  const data = await fetchCities(7);
+  const data = await fetchCities(10);
 
   if (!data) notFound();
 

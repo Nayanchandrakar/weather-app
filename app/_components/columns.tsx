@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
-import Link from "next/link";
+import qs from "query-string";
 
 // This type is used to define the shape of our data.
 
@@ -27,8 +27,18 @@ export const columns: ColumnDef<citiesTableType>[] = [
         </Button>
       );
     },
+    cell: ({ row }) => {
+      const id = row.getValue("id") as string;
+
+      return (
+        <span className="text-right font-medium cursor-pointer">
+          {id?.split("~")?.[0]}
+        </span>
+      );
+    },
     accessorKey: "id",
   },
+
   {
     header: ({ column }) => {
       return (
@@ -41,20 +51,45 @@ export const columns: ColumnDef<citiesTableType>[] = [
         </Button>
       );
     },
+
     accessorKey: "cityName",
     cell: ({ row }) => {
       const cityName = row.getValue("cityName") as string;
+
+      const id = row.getValue("id") as string;
+      const splittedData = id?.split(`~`);
+
+      const lat = splittedData?.[1];
+      const lon = splittedData?.[2];
+
+      const handleToogle = () => {
+        const updatedQuery = {
+          lon,
+          lat,
+        };
+
+        const url = qs.stringifyUrl(
+          {
+            url: "/weather",
+            query: updatedQuery,
+          },
+          { skipNull: true, skipEmptyString: true }
+        );
+
+        window.open(url);
+      };
+
       return (
-        <Link
-          href={`/weather/${cityName}`}
-          target="_blank"
-          className="text-right font-medium"
+        <span
+          onClick={handleToogle}
+          className="text-right font-medium cursor-pointer"
         >
           {cityName}
-        </Link>
+        </span>
       );
     },
   },
+
   {
     header: ({ column }) => {
       return (
@@ -69,6 +104,7 @@ export const columns: ColumnDef<citiesTableType>[] = [
     },
     accessorKey: "country",
   },
+
   {
     header: ({ column }) => {
       return (
