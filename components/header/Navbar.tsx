@@ -3,6 +3,7 @@ import Container from "@/components/shared/container-component";
 import { ToogleTheme } from "@/components/shared/toogle-theme";
 import Link from "next/link";
 import { Cloud } from "lucide-react";
+import SearchBar from "./search-bar";
 
 interface NavbarProps {}
 
@@ -13,6 +14,7 @@ const Navbar: FC<NavbarProps> = ({}) => {
         <Link className="text-2xl font-semibold" href="/">
           <Cloud className="size-7" />
         </Link>
+        <SearchBar className="max-w-sm" />
         <ToogleTheme />
       </Container>
     </header>
