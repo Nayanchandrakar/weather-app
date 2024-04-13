@@ -51,11 +51,13 @@ const InfiniteDataTable = ({ data }: InfiniteDataTableInterface) => {
   };
 
   const outputData: citiesTableType[] = newData?.map((output) => ({
-    id: `${output?.geoname_id} ~ ${output?.coordinates?.lon} ~ ${output?.coordinates?.lat}`,
+    id: `${output?.geoname_id}~${output?.coordinates?.lon}~${output?.coordinates?.lat}`,
     cityName: output?.name,
     country: output?.country,
     timezone: output?.timezone,
   }));
+
+  console.log(newData);
 
   return (
     <Container className="mt-16  ">

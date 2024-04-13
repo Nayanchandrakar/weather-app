@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 interface StaticsCardProps extends AllHTMLAttributes<HTMLDivElement> {
   title: string;
   children: React.ReactNode;
-  badgeTitle?: string;
+  badgeTitle?: "good" | "fair" | "moderate" | "poor" | "very poor";
 }
 
 const StaticsCard: FC<StaticsCardProps> = ({
@@ -26,7 +26,16 @@ const StaticsCard: FC<StaticsCardProps> = ({
     >
       <span className="flex items-center justify-between">
         <p className="text-foreground/70 ">{title}</p>
-        {badgeTitle ? <Badge>{badgeTitle}</Badge> : <p />}
+        {badgeTitle ? (
+          <Badge
+            className="first-letter:uppercase"
+            variant={badgeTitle === "very poor" ? "default" : badgeTitle}
+          >
+            {badgeTitle}
+          </Badge>
+        ) : (
+          <p />
+        )}
       </span>
 
       {children}

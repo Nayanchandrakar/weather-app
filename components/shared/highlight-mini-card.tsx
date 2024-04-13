@@ -27,7 +27,10 @@ const HightLightMiniCard: FC<HightLightMiniCardProps> = ({
       <p className="text-foreground/70 ">{title}</p>
       <span className="flex items-center justify-between mt-4">
         <Icon className="size-10 text-foreground" />
-        <p className="text-2xl font-normal">{data}</p>
+        <p
+          dangerouslySetInnerHTML={{ __html: data }}
+          className={cn("text-2xl font-normal", !data && "italic")}
+        />
       </span>
     </span>
   );

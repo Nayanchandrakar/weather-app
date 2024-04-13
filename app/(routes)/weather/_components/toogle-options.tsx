@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/select";
 import { unitOptions } from "@/constant/units";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { LocateFixed } from "lucide-react";
 
 interface ToogleOptionsProps {
   isCollapsed: boolean;
@@ -20,7 +22,7 @@ const ToogleOptions: FC<ToogleOptionsProps> = ({ isCollapsed }) => {
   const [selectedOption, setselectedOption] = useState(unitOptions[0]?.label);
 
   return (
-    <section>
+    <section className="flex justify-between items-center">
       <div className="max-w-[7rem] w-full">
         <Select defaultValue={selectedOption} onValueChange={setselectedOption}>
           <SelectTrigger
@@ -51,6 +53,10 @@ const ToogleOptions: FC<ToogleOptionsProps> = ({ isCollapsed }) => {
           </SelectContent>
         </Select>
       </div>
+      <Button className="rounded-full bg-violet-500 hover:bg-violet-500/90 text-white ">
+        <LocateFixed className="size-5 mr-2" />
+        Current Location
+      </Button>
     </section>
   );
 };

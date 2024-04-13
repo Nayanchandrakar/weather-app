@@ -75,7 +75,6 @@ export const columns: ColumnDef<citiesTableType>[] = [
           },
           { skipNull: true, skipEmptyString: true }
         );
-
         window.open(url);
       };
 
