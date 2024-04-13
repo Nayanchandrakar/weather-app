@@ -85,5 +85,11 @@
 
 #custom_scrollbar::-webkit-scrollbar {
   height: 5px;
+  width: 6px;
+  border-radius: 50px;
+}
+
+#custom_scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(121, 128, 143, 0.298);
   border-radius: 50px;
 }

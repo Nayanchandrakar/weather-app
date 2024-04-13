@@ -20,10 +20,10 @@ export const removeDuplicates = <T>(arr: Array<T>) => {
   return uniqueArray;
 };
 
-export const temperatureStandards = ["", "metric", "imperial"];
+export const temperatureStandards = ["standard", "metric", "imperial"];
 
 export const getUnits = (units?: string) =>
-  `&units=${units ? units : "standard"}`;
+  `&units=${units ? units : temperatureStandards[0]}`;
 
 export const getUnitHtmlCode = (
   text: string | number,

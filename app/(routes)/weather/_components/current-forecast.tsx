@@ -1,22 +1,34 @@
+"use client";
 import { AllHTMLAttributes, FC } from "react";
-import { Calendar, MapPin } from "lucide-react";
 import Image from "next/image";
 
 import { cn, getUnitHtmlCode } from "@/lib/utils";
-import LabelIcon from "@/components/shared/label-icon";
-import { currentWeatherDataInterface } from "@/types/api-response-datatype";
+
+import { foreCastDataInterface } from "@/types/api-response-datatype";
+import dayjs from "dayjs";
 
 interface ForeCastCurrentProps extends AllHTMLAttributes<HTMLDivElement> {
-  weatherData: currentWeatherDataInterface;
+  forecastData: foreCastDataInterface;
   units: string;
 }
 
 const ForeCastCurrent: FC<ForeCastCurrentProps> = ({
   className,
-  weatherData,
+  forecastData,
   units,
   ...props
 }) => {
+  // function for removing multipe days data
+  const seenDate = new Set();
+  const result = forecastData?.list?.filter((data) => {
+    const date = dayjs(data?.dt_txt)?.format("D");
+    if (!seenDate?.has(date)) {
+      seenDate?.add(date);
+      return true;
+    }
+    return false;
+  });
+
   return (
     <div
       className={cn(
@@ -25,46 +37,37 @@ const ForeCastCurrent: FC<ForeCastCurrentProps> = ({
       )}
       {...props}
     >
-      <p className="text-foreground/90 ">Now</p>
-      <span className="flex items-start justify-between flex-col ">
-        <span className="flex items-center gap-x-4">
-          <p
-            dangerouslySetInnerHTML={{
-              __html: getUnitHtmlCode(weatherData?.main?.temp, units),
-            }}
-            className="text-5xl text-foreground font-semibold"
-          />
+      <p className="text-foreground/90 ">{result?.length} Days Forecast</p>
 
-          <Image
-            src={`/images/${weatherData?.weather?.[0]?.icon}.png`}
-            alt="weatherImage"
-            width={1000}
-            height={1000}
-            sizes="100vw"
-            className="size-20"
-          />
-        </span>
+      <div className="flex flex-col gap-y-4 mt-4 h-fit">
+        {result?.map((data) => (
+          <span className="flex items-center gap-y-4 justify-between mr-2">
+            <span className="flex items-center gap-x-4">
+              <Image
+                src={`/images/${data?.weather?.[0]?.icon}.png`}
+                alt="weatherImage"
+                width={1000}
+                height={1000}
+                sizes="100vw"
+                className="size-8"
+              />
+              <p
+                className="text-foreground/80"
+                dangerouslySetInnerHTML={{
+                  __html: getUnitHtmlCode(data?.main?.temp, units),
+                }}
+              />
+            </span>
 
-        {/* weather current condition like haze , fog  etc */}
-        <text className="text-foreground/80 ">
-          {weatherData?.weather?.[0]?.main}
-        </text>
-
-        {/* weather description here  */}
-        <p className="font-medium text-sm text-foreground mb-4">
-          {weatherData?.weather?.[0]?.description}
-        </p>
-
-        <span className="w-full border" />
-
-        <span className="flex flex-col gap-y-3 mt-4">
-          <LabelIcon Icon={Calendar} Label="Thursday 2, Mar" />
-          <LabelIcon
-            Icon={MapPin}
-            Label={`${weatherData?.name} ${weatherData?.sys?.country}`}
-          />
-        </span>
-      </span>
+            <span className="text-foreground/50 text-sm font-medium">
+              {`${dayjs(data?.dt_txt)?.format("D MMM")}`}
+            </span>
+            <span className="text-foreground/50 text-sm font-medium">
+              {`${dayjs(data?.dt_txt)?.format("dddd")}`}
+            </span>
+          </span>
+        ))}
+      </div>
     </div>
   );
 };

@@ -13,6 +13,7 @@ import ErrorPage from "@/components/shared/error-component";
 import AirQualityIndex from "./_components/air-quality-index";
 import DayStats from "./_components/day-stats-component";
 import { getUnitHtmlCode } from "@/lib/utils";
+import ForeCastCurrent from "./_components/current-forecast";
 
 interface WeatherPageProps {
   searchParams: {
@@ -41,11 +42,11 @@ const WeatherPage = async ({ searchParams }: WeatherPageProps) => {
   }
 
   const airData = await getCurrentAirData(searchParams);
-  // const currentForeCastData = await getCurrentForecast(searchParams);
+  const currentForeCastData = await getCurrentForecast(searchParams);
 
   return (
     <Container className="mt-16 ">
-      <ToogleOptions isCollapsed={false} />
+      <ToogleOptions isCollapsed={false} searchParams={searchParams} />
 
       <section className="grid grid-flow-col gap-4 mt-8">
         <CurrentWeatherCard weatherData={currentWeatherData} units={units} />
@@ -83,6 +84,10 @@ const WeatherPage = async ({ searchParams }: WeatherPageProps) => {
             />
           </div>
         </section>
+      </section>
+
+      <section className="mt-4">
+        <ForeCastCurrent forecastData={currentForeCastData} units={units} />
       </section>
 
       {/* <div className="flex  gap-x-4 mt-6">

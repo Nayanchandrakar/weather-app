@@ -1,3 +1,5 @@
+import { temperatureStandards } from "@/lib/utils";
+
 export type unitsType = {
   label: string;
   id: number;
@@ -5,7 +7,7 @@ export type unitsType = {
 };
 
 export const unitOptions: unitsType[] = [
-  { id: 345345, label: "Kelvin", value: "" },
-  { id: 345345, label: "Celsius", value: "metric" },
-  { id: 56487567, label: "Farenhit", value: "imperial" },
+  { id: 345345, label: "Kelvin", value: temperatureStandards[0] },
+  { id: 345345, label: "Celsius", value: temperatureStandards[1] },
+  { id: 56487567, label: "Farenhit", value: temperatureStandards[2] },
 ];

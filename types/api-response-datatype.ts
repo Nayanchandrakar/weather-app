@@ -71,6 +71,7 @@ interface currentWeatherDataInterface {
   };
   id: number;
   name: string;
+  timezone: number;
   cod: number;
 }
 

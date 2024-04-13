@@ -5,6 +5,7 @@ import Image from "next/image";
 import LabelIcon from "./label-icon";
 import { Calendar, MapPin } from "lucide-react";
 import { currentWeatherDataInterface } from "@/types/api-response-datatype";
+import dayjs from "dayjs";
 
 interface CurrentWeatherCardProps extends AllHTMLAttributes<HTMLDivElement> {
   weatherData: currentWeatherDataInterface;
@@ -58,7 +59,10 @@ const CurrentWeatherCard: FC<CurrentWeatherCardProps> = ({
         <span className="w-full border" />
 
         <span className="flex flex-col gap-y-3 mt-4">
-          <LabelIcon Icon={Calendar} Label="Thursday 2, Mar" />
+          <LabelIcon
+            Icon={Calendar}
+            Label={`${dayjs(weatherData?.timezone)?.format("dddd, D MMM")}`}
+          />
           <LabelIcon
             Icon={MapPin}
             Label={`${weatherData?.name} ${weatherData?.sys?.country}`}

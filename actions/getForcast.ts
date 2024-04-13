@@ -12,7 +12,7 @@ const getCurrentForecast = async ({
   lat,
   lon,
   units,
-}: getCurrentForecastInterface): Promise<foreCastDataInterface[]> => {
+}: getCurrentForecastInterface): Promise<foreCastDataInterface> => {
   try {
     const response = await fetch(
       `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}${getUnits(
@@ -24,7 +24,7 @@ const getCurrentForecast = async ({
 
     return finalData;
   } catch (error) {
-    return [tempForecastData];
+    return tempForecastData;
   }
 };
 

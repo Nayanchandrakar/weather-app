@@ -13,18 +13,53 @@ import { unitOptions } from "@/constant/units";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { LocateFixed } from "lucide-react";
+import qs from "query-string";
+import { useRouter } from "next/navigation";
 
 interface ToogleOptionsProps {
   isCollapsed: boolean;
+  searchParams: {
+    lat: number;
+    lon: number;
+    units: string | null | undefined;
+  };
 }
 
-const ToogleOptions: FC<ToogleOptionsProps> = ({ isCollapsed }) => {
+const ToogleOptions: FC<ToogleOptionsProps> = ({
+  isCollapsed,
+  searchParams,
+}) => {
   const [selectedOption, setselectedOption] = useState(unitOptions[0]?.label);
+
+  const router = useRouter();
+
+  const handleClick = () => {
+    const selectedValue = unitOptions?.find(
+      (data) => data?.label === selectedOption
+    );
+
+    const url = qs.stringifyUrl(
+      {
+        url: "/weather",
+        query: {
+          ...searchParams,
+          units: selectedValue?.value,
+        },
+      },
+      { skipEmptyString: true, skipNull: true }
+    );
+
+    router?.push(url);
+  };
 
   return (
     <section className="flex justify-between items-center">
       <div className="max-w-[7rem] w-full">
-        <Select defaultValue={selectedOption} onValueChange={setselectedOption}>
+        <Select
+          defaultValue={selectedOption}
+          onOpenChange={handleClick}
+          onValueChange={setselectedOption}
+        >
           <SelectTrigger
             className={cn(
               "flex items-center gap-2 [&>span]:line-clamp-1 [&>span]:flex [&>span]:w-full [&>span]:items-center [&>span]:gap-1 [&>span]:truncate [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0",
