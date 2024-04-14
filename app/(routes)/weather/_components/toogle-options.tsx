@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 import {
   Select,
@@ -10,40 +10,33 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { unitOptions } from "@/constant/units";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { LocateFixed } from "lucide-react";
 import qs from "query-string";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
-interface ToogleOptionsProps {
-  isCollapsed: boolean;
-  searchParams: {
-    lat: number;
-    lon: number;
-    units: string | null | undefined;
-  };
+interface searchParamsInterface {
+  lat: number;
+  lon: number;
+  units: string | null | undefined;
 }
 
-const ToogleOptions: FC<ToogleOptionsProps> = ({
-  isCollapsed,
-  searchParams,
-}) => {
-  const [selectedOption, setselectedOption] = useState(unitOptions[0]?.label);
+interface ToogleOptionsProps {
+  searchParams: searchParamsInterface;
+}
+
+const ToogleOptions: FC<ToogleOptionsProps> = ({ searchParams }) => {
+  const [selectedOption, setselectedOption] = useState(unitOptions[0]?.value);
 
   const router = useRouter();
 
-  const handleClick = () => {
-    const selectedValue = unitOptions?.find(
-      (data) => data?.label === selectedOption
-    );
-
+  const navigateParams = (params: searchParamsInterface) => {
     const url = qs.stringifyUrl(
       {
         url: "/weather",
         query: {
-          ...searchParams,
-          units: selectedValue?.value,
+          ...params,
         },
       },
       { skipEmptyString: true, skipNull: true }
@@ -52,43 +45,58 @@ const ToogleOptions: FC<ToogleOptionsProps> = ({
     router?.push(url);
   };
 
+  // Geolocation API
+  const getGeoLocation = () => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          navigateParams({
+            ...searchParams,
+            lat,
+            lon,
+          });
+          toast(`${lat}  ${lon} location data!`);
+        },
+        (error) => {
+          toast("Error getting location: " + error.message);
+        }
+      );
+    } else {
+      toast("Geolocation is not supported by this browser.");
+    }
+  };
+
+  useEffect(() => {
+    navigateParams({
+      ...searchParams,
+      units: selectedOption,
+    });
+  }, [selectedOption, searchParams]);
+
   return (
     <section className="flex justify-between items-center">
-      <div className="max-w-[7rem] w-full">
-        <Select
-          defaultValue={selectedOption}
-          onOpenChange={handleClick}
-          onValueChange={setselectedOption}
-        >
-          <SelectTrigger
-            className={cn(
-              "flex items-center gap-2 [&>span]:line-clamp-1 [&>span]:flex [&>span]:w-full [&>span]:items-center [&>span]:gap-1 [&>span]:truncate [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0",
-              isCollapsed &&
-                "flex h-9 w-9 shrink-0 items-center justify-center p-0 [&>span]:w-auto [&>svg]:hidden"
-            )}
-            aria-label="Select unit"
-          >
-            <SelectValue placeholder="Select an unit">
-              <span className={cn("ml-2", isCollapsed && "hidden")}>
-                {
-                  unitOptions.find((unit) => unit?.label === selectedOption)
-                    ?.label
-                }
-              </span>
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            {unitOptions?.map((Data) => {
-              return (
-                <SelectItem key={Data?.id} value={Data?.label}>
-                  <div className="flex items-center gap-3 ">{Data?.label}</div>
-                </SelectItem>
-              );
-            })}
-          </SelectContent>
-        </Select>
-      </div>
-      <Button className="rounded-full bg-violet-500 hover:bg-violet-500/90 text-white ">
+      <Select
+        onValueChange={setselectedOption}
+        defaultValue={unitOptions?.[0]?.value}
+      >
+        <SelectTrigger className="w-[110px] md:w-[180px]">
+          <SelectValue placeholder="select a unit" />
+        </SelectTrigger>
+        <SelectContent>
+          {unitOptions?.map((unit) => (
+            <SelectItem key={unit?.id} value={unit?.value}>
+              {unit?.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      <Button
+        onClick={getGeoLocation}
+        className="rounded-full bg-violet-500 hover:bg-violet-500/90 text-white "
+      >
         <LocateFixed className="size-5 mr-2" />
         Current Location
       </Button>

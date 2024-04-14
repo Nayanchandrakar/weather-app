@@ -44,7 +44,6 @@ const InfiniteDataTable = ({ data }: InfiniteDataTableInterface) => {
         setActivityLoaded(activityLoaded + 10);
       }
     } catch (error) {
-      console.log(error);
     } finally {
       setIsLoading(false);
     }
@@ -56,8 +55,6 @@ const InfiniteDataTable = ({ data }: InfiniteDataTableInterface) => {
     country: output?.country,
     timezone: output?.timezone,
   }));
-
-  console.log(newData);
 
   return (
     <Container className="mt-16  ">

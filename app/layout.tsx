@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { cn } from "@/lib/utils";
-import "./globals.css";
+import { Inter, Nunito } from "next/font/google";
+
 import { ThemeProvider } from "@/components/shared/theme-provider";
-import { ToogleTheme } from "@/components/shared/toogle-theme";
 import Navbar from "@/components/header/Navbar";
 import { Toaster } from "@/components/ui/sonner";
 
+import "./globals.css";
+
 const inter = Inter({ subsets: ["latin"] });
+const nunito = Nunito({ subsets: ["latin"], variable: "--font-nunito" });
 
 export const metadata: Metadata = {
   title: "Weather app",
@@ -21,9 +22,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn(inter.className)}>
+      <body className={`${inter.className} ${nunito.variable}`}>
         <main>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
             <Navbar />
             <Toaster />
             {children}

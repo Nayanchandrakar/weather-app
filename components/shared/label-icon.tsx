@@ -16,13 +16,8 @@ const LabelIcon: FC<LabelIconProps> = ({
   return (
     <div className={cn("flex items-center gap-x-2", className)} {...props}>
       <Icon className="size-5 text-foreground/90" />
-      <span
-        className={cn(
-          "text-foreground/50 text-sm font-medium",
-          !Label && "italic"
-        )}
-      >
-        {Label ? Label : "no data."}
+      <span className={cn("text-foreground/50 text-sm font-medium ")}>
+        {Label}
       </span>
     </div>
   );

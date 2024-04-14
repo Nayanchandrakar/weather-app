@@ -13,11 +13,11 @@ const AirQualityIndex: FC<AirQualityIndexProps> = ({ data }) => {
 
   return (
     <StaticsCard
-      title="hellow"
+      title="Air Quality Index"
       badgeTitle={airQualityIndexStatus(data?.list?.[0]?.main?.aqi)}
     >
       <div className="flex mt-4 items-center gap-x-4">
-        <Wind className="size-10 text-foreground" />
+        <Wind className="size-8 text-foreground" />
 
         {/* map function  */}
         <div
@@ -25,12 +25,15 @@ const AirQualityIndex: FC<AirQualityIndexProps> = ({ data }) => {
           className="flex flex-row gap-x-4 overflow-x-scroll "
         >
           {Object?.entries(gases)?.map(([key, value]) => (
-            <span className="flex gap-y-1 items-center justify-center flex-col">
+            <span
+              key={value}
+              className="flex gap-y-1 items-center justify-center flex-col"
+            >
               <text className="font-normal text-sm uppercase text-foreground/60">
                 {key}
               </text>
 
-              <p className="text-2xl font-normal">{value}</p>
+              <p className="text-xl font-normal">{value}</p>
             </span>
           ))}
         </div>

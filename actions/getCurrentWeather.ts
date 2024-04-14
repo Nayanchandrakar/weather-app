@@ -24,7 +24,6 @@ const getCurrentWeather = async ({
 
     return finalData;
   } catch (error) {
-    console.log(error);
     return tempCurrentWeather;
   }
 };

@@ -131,30 +131,6 @@ const DataTable = React.forwardRef<
             ))}
           </TableHeader>
           <TableBody>
-            {/* {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell ref={ref}>
-                  <Loader2 className="size-5 animate-spin" />
-                </TableCell>
-              </TableRow>
-            )} */}
-
             {table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
@@ -168,16 +144,31 @@ const DataTable = React.forwardRef<
               </TableRow>
             ))}
 
-            <TableRow>
-              <TableCell ref={ref}>
-                <Loader2 className="size-5 animate-spin" />
-              </TableCell>
-            </TableRow>
+            {table.getColumn("cityName")?.getFilterValue() ? (
+              !table?.getRowModel()?.rows?.length ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
+                </TableRow>
+              ) : null
+            ) : (
+              <TableRow>
+                <TableCell ref={ref}>
+                  <Loader2 className="size-5 animate-spin" />
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </div>
     </div>
   );
 });
+
+DataTable.displayName = "DataTable";
 
 export default DataTable;

@@ -17,7 +17,7 @@ const DayStats: FC<DayStatsProps> = ({ data }) => {
   return (
     <StaticsCard title="Sunrise & Sunset">
       <div className="flex mt-4 items-center gap-x-4">
-        <Sun className="size-10 text-foreground" />
+        <Sun className="size-8 text-foreground" />
 
         {/* map function  */}
         <div className="flex flex-row gap-x-4  ">
@@ -26,7 +26,7 @@ const DayStats: FC<DayStatsProps> = ({ data }) => {
               Sunrise
             </text>
 
-            <p className="text-2xl font-normal">{sunrise}</p>
+            <p className="text-xl font-normal">{sunrise}</p>
           </span>
 
           <span className="flex gap-y-1 items-start justify-center flex-col">
@@ -34,7 +34,7 @@ const DayStats: FC<DayStatsProps> = ({ data }) => {
               Sunset
             </text>
 
-            <p className="text-2xl font-normal">{sunset}</p>
+            <p className="text-xl font-normal">{sunset}</p>
           </span>
         </div>
       </div>

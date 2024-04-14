@@ -41,7 +41,10 @@ const ForeCastCurrent: FC<ForeCastCurrentProps> = ({
 
       <div className="flex flex-col gap-y-4 mt-4 h-fit">
         {result?.map((data) => (
-          <span className="flex items-center gap-y-4 justify-between mr-2">
+          <span
+            key={data?.dt}
+            className="flex items-center gap-y-4 justify-between mr-2"
+          >
             <span className="flex items-center gap-x-4">
               <Image
                 src={`/images/${data?.weather?.[0]?.icon}.png`}

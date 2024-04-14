@@ -1,3 +1,4 @@
+"use client";
 import { AllHTMLAttributes, FC } from "react";
 
 import { cn, getUnitHtmlCode } from "@/lib/utils";
@@ -61,15 +62,15 @@ const CurrentWeatherCard: FC<CurrentWeatherCardProps> = ({
         <span className="flex flex-col gap-y-3 mt-4">
           <LabelIcon
             Icon={Calendar}
-            Label={`${dayjs(weatherData?.timezone)?.format("dddd, D MMM")}`}
+            Label={`${dayjs.unix(weatherData?.dt)?.format("dddd, D MMM")}`}
           />
-          <LabelIcon
-            Icon={MapPin}
-            Label={`${weatherData?.name} ${weatherData?.sys?.country}`}
-          />
+          {weatherData?.name && (
+            <LabelIcon
+              Icon={MapPin}
+              Label={`${weatherData?.name} ${weatherData?.sys?.country}`}
+            />
+          )}
         </span>
-
-        {/* <p className="text-2xl font-normal">{}</p> */}
       </span>
     </div>
   );

@@ -17,6 +17,7 @@ import { useDebounceValue, useOnClickOutside } from "usehooks-ts";
 import { Input } from "@/components/ui/input";
 import fetchSearch from "@/actions/client/fetchSearch";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface SearchBarProps extends AllHTMLAttributes<HTMLDivElement> {}
 
@@ -52,11 +53,10 @@ const SearchBar: FC<SearchBarProps> = ({ className, ...props }) => {
         const response = await fetchSearch(debouncedValue);
         if (response?.length > 0) {
           setsearchResults(response);
-          console.log(searchResults);
         }
       }
     } catch (error) {
-      // toast message display here
+      toast("No search query.");
     } finally {
       setIsLoading(false);
     }
